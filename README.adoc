@@ -1,0 +1,75 @@
+= Node-RED
+:toc:
+:toc-title: 目录
+:toclevels: 3
+:sectnums:
+:scripts: cjk
+:doctype: book
+:experimental:
+
+== 简介
+
+Environment for **Node-RED** Appication
+
+为运行 **Node-RED** 应用而提供的环境
+
+== 特性
+
+* Alpine
+* Node-RED 4.0.5
+* TZ=Asia/Shanghai
+* telnet
+* many nodes
+* work dir: /usr/src/node-red
+* data dir: /data
+
+== 编译并上传镜像
+
+[source,bash]
+----
+docker buildx build --platform linux/arm64,linux/amd64 -t nnzbz/node-red:4.0.5 --build-arg VERSION=4.0.5 . --push
+docker buildx build --platform linux/arm64,linux/amd64 -t nnzbz/node-red:4.0 --build-arg VERSION=4.0.5 . --push
+docker buildx build --platform linux/arm64,linux/amd64 -t nnzbz/node-red:latest --build-arg VERSION=4.0.5 . --push
+----
+
+== 单机
+
+. 正常运行
++
+[source,bash]
+----
+docker run -d -p1880:1880 -v data:/data --restart=always --name nodered nnzbz/node-red:4.0.5
+----
+. 如果要使用串口
++
+[source,bash]
+----
+# 运行(/dev/ttyS0 为串口设备)
+docker run -d -p1880:1880 --device /dev/ttyS0:/dev/ttyS0 --device /dev/ttyUSB0:/dev/ttyUSB0 -v data:/data --restart=always --name nodered nnzbz/node-red:4.0.5
+----
+
+== Docker Compose
+
+- Docker Compose 文件
++
+./usr/local/node-red/stack.yml
+[source,yaml]
+----
+services:
+  svr:
+    image: nnzbz/node-red:4.0.5
+    init: true
+    ports:
+      - 1880:1880
+    devices:
+      - /dev/ttyS0:/dev/ttyS0
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - data:/data:z
+----
+- 部署
++
+[source,bash]
+----
+docker compose -f /usr/local/node-red/stack.yml up -d
+----
