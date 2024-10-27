@@ -1,11 +1,6 @@
 = Node-RED
 :toc:
-:toc-title: 目录
-:toclevels: 3
 :sectnums:
-:scripts: cjk
-:doctype: book
-:experimental:
 
 == 简介
 
